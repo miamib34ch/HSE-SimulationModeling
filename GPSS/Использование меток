@@ -1,0 +1,42 @@
+GENERATE 30,10
+     QUEUE QSELLER
+     SEIZE SELLER
+     DEPART QSELLER
+     TRANSFER 0.3,OUT           ;С вероятностью 0.3 прыгаем на метку OUT или идём дальше
+     ADVANCE 12,2
+OUT  RELEASE SELLER
+
+     QUEUE QKASSA
+     SEIZE KASSA
+     DEPART QKASSA
+     TRANSFER 0.4,OUT1,RES      ;С вероятностью 0,6 прыгаем на метку OUT1; 0,4 на метку RES
+OUT1 ADVANCE 7,2
+RES  RELEASE KASSA 
+     TERMINATE
+  
+  
+GENERATE 7,2,360                ;Вторая смена, которая начинается через 6 часов (360 минут) после начала работы магазина
+     QUEUE QSELLER
+     SEIZE SELLER
+     DEPART QSELLER
+     ADVANCE 12,2 
+     RELEASE SELLER
+     
+     QUEUE QKASSA
+     TRANSFER BOTH,OUT2,OUT3    ;Если метка OUT2 занята, идём в OUT3
+OUT2 SEIZE KASSA
+     DEPART QKASSA
+     ADVANCE 7,2
+     RELEASE KASSA
+     TRANSFER ,RES2             ;100% прыгаем на метку 
+
+OUT3 SEIZE KASSA2
+     DEPART QKASSA
+     ADVANCE 7,2
+     RELEASE KASSA2
+     TRANSFER ,RES2             ;100% прыгаем на метку 
+
+RES2 TERMINATE
+
+GENERATE 480
+     TERMINATE 1

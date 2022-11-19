@@ -1,0 +1,35 @@
+zoneA storage 24	;каждый официант обслуживает 24 места (6 по 4)
+zoneB storage 24
+
+generate 180, 120
+
+queue lookingPlace
+transfer both,toWaiterA,toWaiterB	;все пытаются сесть к официанту А, если свободных нет, то к официанту Б, если оба заняты будет ждать
+
+toWaiterA enter zoneA ;садится за стол
+depart lookingPlace
+queue tableZoneA
+seize waiterA ;официант пришёл к клиенту
+advance 40,10 ;даёт заказ
+advance 200,50 ;выполняется заказ
+release waiterA ;официант покинул клиента
+advance 720,180 ;ест
+leave zoneA ;покидает стол
+depart tableZoneA
+terminate ;ушёл
+
+toWaiterB enter zoneB
+depart lookingPlace
+queue tableZoneB
+seize waiterB
+advance 35,8 
+advance 200,50
+release waiterB
+advance 720,180
+leave zoneB
+depart tableZoneB
+terminate
+
+generate 36000
+terminate 1
+start 1

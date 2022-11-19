@@ -1,0 +1,30 @@
+machineC storage 3 ;станок С может обрабатывать 3 детали одновременно
+
+generate 420,120
+queue partProcessing ;деталь на обработке в цеху
+queue toFirstMachine
+transfer 0.3,prob1,prob2
+
+prob1 seize machineA
+depart toFirstMachine
+advance 840,600 ;обработка детали
+release machineA
+transfer 0.075,prob3,prob1
+
+prob2 seize machineB
+depart toFirstMachine
+advance 960,480 ;обработка детали
+release machineB
+transfer 0.075,prob3,prob2
+
+prob3 queue toMachineC
+enter machineC
+depart toMachineC
+advance 540,180
+leave machineC
+depart partProcessing
+terminate
+
+generate 28800
+terminate 1
+start 1

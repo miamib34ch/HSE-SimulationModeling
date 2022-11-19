@@ -1,0 +1,56 @@
+meat_sellers STORAGE 2
+veg_sellers STORAGE 2
+
+SWITCHER_KASSA FUNCTION RN4,D5                  ;функция SWITCHER_KASSA использует рандом (RN4), у неё пять точек выхода (D5)
+0.2,LB1/0.4,LB2/0.6,LB3/0.8,LB4/1,LB5           ;точки выхода - промежуток рандома,возращаемое значение (метка на которую прыгает)
+
+SWITCHER_PROD FUNCTION RN4,D3
+0.3,LBM/0.6,LBV/1,LBR/
+
+GENERATE 10,5
+      ADVANCE 20,5
+      
+      Transfer ,FN$SWITCHER_PROD                ;обращаемся к функции, чтобы выбрать на какую метку прыгнуть 
+LBM   QUEUE QSELLER
+      ENTER meat_sellers
+      DEPART QSELLER
+      ADVANCE 5,2
+      LEAVE meat_sellers
+      TRANSFER ,LBR
+LBV   QUEUE QSELLER2
+      ENTER veg_sellers
+      DEPART QSELLER2
+      ADVANCE 5,2
+      LEAVE veg_sellers
+      
+LBR QUEUE QKASSA
+      Transfer ,FN$SWITCHER_KASSA
+LB1   SEIZE KASSA 
+      DEPART QKASSA
+      ADVANCE 7,2
+      RELEASE KASSA
+      TRANSFER ,res
+LB2 SEIZE KASSA2
+      DEPART QKASSA
+      ADVANCE 7,2
+      RELEASE KASSA2
+      TRANSFER ,res
+LB3   SEIZE KASSA3
+      DEPART QKASSA
+      ADVANCE 7,2
+      RELEASE KASSA3
+      TRANSFER ,res
+LB4   SEIZE KASSA4
+      DEPART QKASSA
+      ADVANCE 7,2
+      RELEASE KASSA4
+      TRANSFER ,res
+LB5   SEIZE KASSA5
+      DEPART QKASSA
+      ADVANCE 7,2
+      RELEASE KASSA5
+      TRANSFER ,res
+res   TERMINATE
+
+GENERATE 480
+      TERMINATE 1

@@ -1,0 +1,46 @@
+intens_seller1 VARIABLE 12+FC$seller#0.2                ;Определяем переменную, которая равна 12+количествоВходовВУстройствоSeller*0.2
+intens_seller2 VARIABLE QC$QSELLER#0.25
+intens_kassa VARIABLE 7-FC$KASSA#0.1-FT$KASSA#0.1
+
+GENERATE 30,10
+      QUEUE QSELLER
+      TRANSFER 0.5,Ms1,Ms2
+Ms1   SEIZE SELLER
+      DEPART QSELLER
+      ADVANCE V$intens_seller1                          ;Обращаемся к переменной intens_seller1
+      RELEASE SELLER
+      TRANSFER ,Res
+Ms2   SEIZE SELLER2
+      DEPART QSELLER
+      ADVANCE (QC$QSELLER#0.25)                         ;Переменные необязательно использовать, можно написать выражение в круглых скобках
+      RELEASE SELLER2
+Res   QUEUE QKASSA
+      SEIZE KASSA
+      DEPART QKASSA
+      ADVANCE V$intens_kassa
+      RELEASE KASSA
+      TERMINATE
+      
+GENERATE 7,2,360
+      QUEUE QSELLER
+      TRANSFER 0.5,Ms3,Ms4
+Ms3   SEIZE SELLER
+      DEPART QSELLER
+      ADVANCE V$intens_seller1
+      RELEASE SELLER
+      TRANSFER ,Res2
+Ms4   SEIZE SELLER2
+      DEPART QSELLER
+      ADVANCE V$intens_seller2
+      RELEASE SELLER2
+Res2  QUEUE QKASSA
+      SEIZE KASSA
+      DEPART QKASSA
+      ADVANCE V$intens_kassa
+      RELEASE KASSA
+      TERMINATE
+      
+GENERATE 720
+      TERMINATE 1
+      
+START 1

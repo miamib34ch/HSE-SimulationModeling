@@ -1,0 +1,14 @@
+Kassa_Sum VARIABLE 0                  ;Определяем переменную выручки
+
+GENERATE ,,,4
+Beg1  Advance 15,3 
+      SEIZE kassa 
+      Advance 5,2
+      Release kassa
+      SAVEVALUE  Kassa_Sum+,200       ;Когда кассир заканчивает обслуживание выручка увеличивается на 200
+      TRANSFER ,beg1 
+
+GENERATE 480
+      TERMINATE 1
+
+Start 1
